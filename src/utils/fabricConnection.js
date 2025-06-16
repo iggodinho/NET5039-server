@@ -43,6 +43,7 @@ async function getContract({
   tlsCertPath,
   peerEndpoint,
   peerHostAlias,
+  contractName
 }) {
   const client = await newGrpcConnection(tlsCertPath, peerEndpoint, peerHostAlias);
   const gateway = connect({
@@ -57,7 +58,7 @@ async function getContract({
   });
 
   const network = gateway.getNetwork(channelName);
-  const contract = network.getContract(chaincodeName);
+  const contract = network.getContract(chaincodeName, contractName);
 
   return { contract, gateway, client, utf8Decoder };
 }

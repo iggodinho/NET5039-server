@@ -12,6 +12,7 @@ function buildConfig() {
     tlsCertPath: process.env.TLS_CERT_PATH,
     peerEndpoint: process.env.PEER_ENDPOINT,
     peerHostAlias: process.env.PEER_HOST_ALIAS,
+    contractName:"AssetTransfer"
   };
 }
 
@@ -19,7 +20,8 @@ async function initLedger() {
     const config = buildConfig();
     const { contract, gateway, client } = await getContract(config);
     try {
-        await contract.submitTransaction('InitLedger');
+        const response = await contract.submitTransaction('InitLedger');
+        console.log("(Services) The response of the submit is: ",response)
     } finally {
         gateway.close();
         client.close();
@@ -43,6 +45,8 @@ async function transferOwnership(objectID, newOwner) {
     const { contract, gateway, client } = await getContract(config);
     try {
         const resultBytes = await contract.submitTransaction('TransferOwnership', objectID, newOwner);
+        console.log(resultBytes)
+        console.log(utf8Decoder.decode(resultBytes))
         return utf8Decoder.decode(resultBytes);
     } finally {
         gateway.close();
